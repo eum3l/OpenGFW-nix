@@ -37,11 +37,11 @@
     "opengfw-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1708746678,
-        "narHash": "sha256-VAWutigmtLOBiFvCkSwAaeF8EpAXZerAqv9BYyn/nUo=",
+        "lastModified": 1708935162,
+        "narHash": "sha256-esCofbbmvtVUR4oAHkvqAOopnnXrcplr0vUTIa6kU0c=",
         "owner": "apernet",
         "repo": "opengfw",
-        "rev": "8b07826de6300158aadfd13789485bc7d40057c3",
+        "rev": "bc2e21e35dcc747bbc80fdebf5dae6215a0c5206",
         "type": "github"
       },
       "original": {

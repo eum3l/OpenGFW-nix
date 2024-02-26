@@ -1,12 +1,11 @@
 {
   lib,
   buildGoModule,
-  fetchFromGitHub,
   src,
 }:
 buildGoModule rec {
   pname = "opengfw";
-  version = "0.2.1";
+  version = "0.2.2";
 
   inherit src;
   vendorHash = "sha256-NT9KJFodTjd2HVTGDEnhfcdtl9UNaqzwTwwMHoujmAo=";
