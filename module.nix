@@ -95,6 +95,22 @@ in {
                   default = true;
                   example = false;
                 };
+                rcvBuf = mkOption {
+                  description = mdDoc ''
+                    Netlink recieve buffer size.
+                  '';
+                  type = types.int;
+                  default = 4194304;
+                  example = 2097152;
+                };
+                sndBuf = mkOption {
+                  description = mdDoc ''
+                    Netlink send buffer size.
+                  '';
+                  type = types.int;
+                  default = 4194304;
+                  example = 2097152;
+                };
               };
             };
           };
