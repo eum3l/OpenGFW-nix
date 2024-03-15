@@ -1,20 +1,21 @@
 {
   lib,
   buildGoModule,
+  platforms,
   src,
+  version,
 }:
 buildGoModule {
+  inherit version src;
   pname = "opengfw";
-  version = "0.2.3";
 
-  inherit src;
   vendorHash = "sha256-NT9KJFodTjd2HVTGDEnhfcdtl9UNaqzwTwwMHoujmAo=";
-
   patches = [
     ./v2geo-remove-test.patch
   ];
 
   meta = with lib; {
+    inherit platforms;
     mainProgram = "OpenGFW";
     description = "A flexible, easy-to-use, open source implementation of GFW on Linux";
     longDescription = ''
@@ -26,6 +27,5 @@ buildGoModule {
     '';
     homepage = "https://github.com/apernet/OpenGFW";
     license = licenses.mpl20;
-    platforms = platforms.linux;
   };
 }

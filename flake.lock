@@ -34,27 +34,28 @@
         "type": "github"
       }
     },
-    "opengfw-src": {
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "src": "src"
+      }
+    },
+    "src": {
       "flake": false,
       "locked": {
         "lastModified": 1709234588,
         "narHash": "sha256-3s4NodBZbLpamNzgDmWt/GBqpcljCoZL4szJzGcnoKw=",
         "owner": "apernet",
-        "repo": "opengfw",
+        "repo": "OpenGFW",
         "rev": "1dce82745d0bc8b3813aea147954ba3a2294ef30",
         "type": "github"
       },
       "original": {
         "owner": "apernet",
-        "repo": "opengfw",
+        "ref": "v0.2.3",
+        "repo": "OpenGFW",
         "type": "github"
-      }
-    },
-    "root": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs",
-        "opengfw-src": "opengfw-src"
       }
     },
     "systems": {

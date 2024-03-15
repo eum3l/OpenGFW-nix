@@ -1,11 +1,14 @@
-{
+rec {
   description = "OpenGFW is a flexible, easy-to-use, open source implementation of GFW on Linux.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=23.11";
     flake-utils.url = "github:numtide/flake-utils";
-    opengfw-src = {
-      url = "github:apernet/opengfw";
+    src = {
+      type = "github";
+      owner = "apernet";
+      repo = "OpenGFW";
+      ref = "v0.2.3";
       flake = false;
     };
   };
@@ -14,9 +17,11 @@
     self,
     nixpkgs,
     flake-utils,
-    opengfw-src,
-  }:
-    flake-utils.lib.eachDefaultSystem (
+    src,
+  }: let
+    platforms = ["aarch64-linux" "x86_64-linux"];
+  in
+    flake-utils.lib.eachSystem platforms (
       system: let
         pkgs = import nixpkgs {
           inherit system;
@@ -26,13 +31,15 @@
         formatter = pkgs.alejandra;
 
         packages = rec {
-          opengfw = pkgs.callPackage ./package.nix {src = opengfw-src;};
           default = opengfw;
+          opengfw = pkgs.callPackage ./package.nix {
+            inherit platforms src;
+            version = pkgs.lib.removePrefix "v" inputs.src.ref;
+          };
         };
 
         devShells.default = pkgs.mkShell {
           OPENGFW_LOG_LEVEL = "debug";
-          nativeBuildInputs = with pkgs; [go];
           inputsFrom = [
             self.packages.${system}.opengfw
           ];
