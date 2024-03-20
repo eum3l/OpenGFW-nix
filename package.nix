@@ -9,7 +9,7 @@ buildGoModule {
   inherit version src;
   pname = "opengfw";
 
-  vendorHash = "sha256-NT9KJFodTjd2HVTGDEnhfcdtl9UNaqzwTwwMHoujmAo=";
+  vendorHash = "sha256-nxehSjdVvcexpR2uwR7kNIRoD88ye9caB2RQJvqQFB8=";
   patches = [
     ./v2geo-remove-test.patch
   ];

@@ -1,6 +1,11 @@
 rec {
   description = "OpenGFW is a flexible, easy-to-use, open source implementation of GFW on Linux.";
 
+  nixConfig = {
+    extra-substituters = ["https://opengfw.cachix.org"];
+    extra-trusted-public-keys = ["opengfw.cachix.org-1:vuygVQLuz+GEsqd6RrPOU8ckphW1MVe8MFm22cOo2is="];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=23.11";
     flake-utils.url = "github:numtide/flake-utils";
@@ -27,7 +32,7 @@ rec {
           inherit system;
           config.allowUnsupportedSystem = true;
         };
-      in {
+      in rec {
         formatter = pkgs.alejandra;
 
         packages = rec {
@@ -41,7 +46,7 @@ rec {
         devShells.default = pkgs.mkShell {
           OPENGFW_LOG_LEVEL = "debug";
           inputsFrom = [
-            self.packages.${system}.opengfw
+            packages.opengfw
           ];
         };
       }
