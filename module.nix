@@ -95,6 +95,14 @@ in {
                   default = true;
                   example = false;
                 };
+                rst = mkOption {
+                  description = mdDoc ''
+                    Set to true if you want to send RST for blocked TCP connections, needs `local = false`.
+                  '';
+                  type = types.bool;
+                  default = ! cfg.settings.io.local;
+                  example = false;
+                };
                 rcvBuf = mkOption {
                   description = mdDoc ''
                     Netlink recieve buffer size.
