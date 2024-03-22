@@ -8,11 +8,7 @@
 buildGoModule {
   inherit version src;
   pname = "opengfw";
-
-  vendorHash = "sha256-nxehSjdVvcexpR2uwR7kNIRoD88ye9caB2RQJvqQFB8=";
-  patches = [
-    ./v2geo-remove-test.patch
-  ];
+  vendorHash = "sha256-x+ZFHk35KKtrZ0rN4Wnj7C2ioCmJynKM0O6+opp9X/k=";
 
   meta = with lib; {
     inherit platforms;

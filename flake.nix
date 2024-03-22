@@ -13,7 +13,7 @@ rec {
       type = "github";
       owner = "apernet";
       repo = "OpenGFW";
-      ref = "v0.2.3";
+      ref = "v0.3.0";
       flake = false;
     };
   };

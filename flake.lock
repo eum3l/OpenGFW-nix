@@ -44,16 +44,16 @@
     "src": {
       "flake": false,
       "locked": {
-        "lastModified": 1709234588,
-        "narHash": "sha256-3s4NodBZbLpamNzgDmWt/GBqpcljCoZL4szJzGcnoKw=",
+        "lastModified": 1711071823,
+        "narHash": "sha256-GALrJcLOV3YtVadhrREOqXzUXK6IuvCz2SW8xRkj0jQ=",
         "owner": "apernet",
         "repo": "OpenGFW",
-        "rev": "1dce82745d0bc8b3813aea147954ba3a2294ef30",
+        "rev": "bf2988116a9fd82fa9773625d3325df393ab47ab",
         "type": "github"
       },
       "original": {
         "owner": "apernet",
-        "ref": "v0.2.3",
+        "ref": "v0.3.0",
         "repo": "OpenGFW",
         "type": "github"
       }
