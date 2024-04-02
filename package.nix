@@ -21,7 +21,7 @@ buildGoModule {
       Bring the thrill of cyber-sovereignty right into your home router
       and start filtering like a pro - you too can play Big Brother.
     '';
-    homepage = "https://github.com/apernet/OpenGFW";
+    homepage = "https://gfw.dev/";
     license = licenses.mpl20;
   };
 }

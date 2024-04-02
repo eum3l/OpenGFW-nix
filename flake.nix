@@ -13,7 +13,7 @@ rec {
       type = "github";
       owner = "apernet";
       repo = "OpenGFW";
-      ref = "v0.3.0";
+      ref = "v0.3.1";
       flake = false;
     };
   };
@@ -45,6 +45,8 @@ rec {
 
         devShells.default = pkgs.mkShell {
           OPENGFW_LOG_LEVEL = "debug";
+          CGO_ENABLED = 0;
+
           inputsFrom = [
             packages.opengfw
           ];
