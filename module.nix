@@ -4,7 +4,7 @@ packages: {
   config,
   ...
 }: let
-  inherit (lib) mkOption types mkIf mdDoc optionalString;
+  inherit (lib) mkOption types mkIf optionalString;
   cfg = config.services.opengfw;
   format = pkgs.formats.yaml {};
 
@@ -18,7 +18,9 @@ packages: {
     else cfg.rulesFile;
 in {
   options.services.opengfw = {
-    enable = lib.mkEnableOption (mdDoc "A flexible, easy-to-use, open source implementation of GFW on Linux.");
+    enable = lib.mkEnableOption ''
+      OpenGFW, A flexible, easy-to-use, open source implementation of GFW on Linux
+    '';
 
     package = lib.mkPackageOption packages.${pkgs.system} "opengfw" {
       default = "opengfw";
@@ -27,68 +29,82 @@ in {
     user = mkOption {
       default = "opengfw";
       type = types.singleLineStr;
-      description = mdDoc ''
-        Username of OpenGFW user.
-      '';
+      description = "Username of the OpenGFW user.";
     };
 
     dir = mkOption {
       default = "/var/lib/opengfw";
       type = types.singleLineStr;
-      description = mdDoc ''
-        Working directory of service and home of opengfw.user.
+      description = ''
+        Working directory of the OpenGFW service and home of `opengfw.user`.
       '';
     };
 
-    logDir = mkOption {
+    logFile = mkOption {
       default = null;
-      type = types.nullOr types.singleLineStr;
-      example = "/home/user/opengfw.log";
-      description = mdDoc ''
+      type = types.nullOr types.path;
+      example = "/var/lib/opengfw/opengfw.log";
+      description = ''
         File to write the output to instead of systemd.
       '';
+    };
+
+    logFormat = mkOption {
+      description = ''
+        Format of the logs. [logFormatMap](https://github.com/apernet/OpenGFW/blob/d7737e92117a11c9a6100d53019fac3b9d724fe3/cmd/root.go#L62)
+      '';
+      default = "json";
+      example = "console";
+      type = types.enum ["json" "console"];
+    };
+
+    logLevel = mkOption {
+      description = ''
+        Level of the logs. [logLevelMap](https://github.com/apernet/OpenGFW/blob/d7737e92117a11c9a6100d53019fac3b9d724fe3/cmd/root.go#L55)
+      '';
+      default = "info";
+      example = "warn";
+      type = types.enum ["debug" "info" "warn" "error"];
     };
 
     rulesFile = mkOption {
       default = null;
       type = types.nullOr types.path;
-      description = mdDoc ''
-        File instead of declaring opengfw.rules.
+      description = ''
+        Path to file containing OpenGFW rules.
       '';
     };
 
     settingsFile = mkOption {
       default = null;
       type = types.nullOr types.path;
-      description = mdDoc ''
-        File instead of declaring opengfw.settings.
+      description = ''
+        Path to file containing OpenGFW settings.
       '';
     };
 
     settings = mkOption {
       default = null;
-      description = mdDoc ''
-        Settings passed to OpenGFW. [Example config](https://github.com/apernet/OpenGFW#example-config)
+      description = ''
+        Settings passed to OpenGFW. [Example config](https://gfw.dev/docs/build-run/#example-config)
       '';
       type = types.nullOr (types.submodule {
         options = {
           io = mkOption {
-            description = mdDoc ''
+            description = ''
               IO settings.
             '';
             default = {};
             type = types.submodule {
               options = {
                 queueSize = mkOption {
-                  description = mdDoc ''
-                    IO queue size.
-                  '';
+                  description = "IO queue size.";
                   type = types.int;
                   default = 1024;
                   example = 2048;
                 };
                 local = mkOption {
-                  description = mdDoc ''
+                  description = ''
                     Set to false if you want to run OpenGFW on FORWARD chain.
                   '';
                   type = types.bool;
@@ -96,25 +112,22 @@ in {
                   example = false;
                 };
                 rst = mkOption {
-                  description = mdDoc ''
+                  description = ''
                     Set to true if you want to send RST for blocked TCP connections, needs `local = false`.
                   '';
                   type = types.bool;
                   default = ! cfg.settings.io.local;
+                  defaultText = "`!config.services.opengfw.settings.io.local`";
                   example = false;
                 };
                 rcvBuf = mkOption {
-                  description = mdDoc ''
-                    Netlink recieve buffer size.
-                  '';
+                  description = "Netlink receive buffer size.";
                   type = types.int;
                   default = 4194304;
                   example = 2097152;
                 };
                 sndBuf = mkOption {
-                  description = mdDoc ''
-                    Netlink send buffer size.
-                  '';
+                  description = "Netlink send buffer size.";
                   type = types.int;
                   default = 4194304;
                   example = 2097152;
@@ -123,7 +136,7 @@ in {
             };
           };
           geo = mkOption {
-            description = mdDoc ''
+            description = ''
               The path to load specific local geoip/geosite db files.
               If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules-dat)[https://github.com/Loyalsoldier/v2ray-rules-dat].
             '';
@@ -131,16 +144,12 @@ in {
             type = types.submodule {
               options = {
                 geoip = mkOption {
-                  description = mdDoc ''
-                    IO queue size.
-                  '';
+                  description = "Path to `geoip.dat`.";
                   default = null;
                   type = types.nullOr types.path;
                 };
                 geosite = mkOption {
-                  description = mdDoc ''
-                    Set to false if you want to run OpenGFW on FORWARD chain.
-                  '';
+                  description = "Path to `geosite.dat`.";
                   default = null;
                   type = types.nullOr types.path;
                 };
@@ -149,30 +158,24 @@ in {
           };
           workers = mkOption {
             default = {};
-            description = ''
-              Worker settings.
-            '';
+            description = "Worker settings.";
             type = types.submodule {
               options = {
                 count = mkOption {
                   type = types.int;
-                  description = mdDoc ''
-                    Number of workers.
-                  '';
+                  description = "Number of workers.";
                   default = 4;
                   example = 8;
                 };
                 queueSize = mkOption {
                   type = types.int;
-                  description = mdDoc ''
-                    Worker queue size.
-                  '';
+                  description = "Worker queue size.";
                   default = 16;
                   example = 32;
                 };
                 tcpMaxBufferedPagesTotal = mkOption {
                   type = types.int;
-                  description = mdDoc ''
+                  description = ''
                     TCP max total buffered pages.
                   '';
                   default = 4096;
@@ -180,7 +183,7 @@ in {
                 };
                 tcpMaxBufferedPagesPerConn = mkOption {
                   type = types.int;
-                  description = mdDoc ''
+                  description = ''
                     TCP max total bufferd pages per connection.
                   '';
                   default = 64;
@@ -188,9 +191,7 @@ in {
                 };
                 udpMaxStreams = mkOption {
                   type = types.int;
-                  description = mdDoc ''
-                    UDP max streams.
-                  '';
+                  description = "UDP max streams.";
                   default = 4096;
                   example = 8192;
                 };
@@ -203,21 +204,21 @@ in {
 
     rules = mkOption {
       default = [];
-      description = mdDoc ''
-        Rules passed to OpenGFW. [Example rules](https://github.com/apernet/OpenGFW?tab=readme-ov-file#example-rules)
+      description = ''
+        Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/build-run#example-rules)
       '';
       type = types.listOf (
         types.submodule {
           options = {
             name = mkOption {
-              description = mdDoc "Name of the rule.";
+              description = "Name of the rule.";
               example = "block google dns";
               type = types.singleLineStr;
             };
 
             action = mkOption {
-              description = mdDoc ''
-                Action of the rule. [Supported actions](https://github.com/apernet/OpenGFW?tab=readme-ov-file#supported-actions)
+              description = ''
+                Action of the rule. [Supported actions](https://gfw.dev/docs/build-run#supported-actions)
               '';
               default = "allow";
               example = "block";
@@ -225,15 +226,15 @@ in {
             };
 
             log = mkOption {
-              description = mdDoc "Wether to enable logging for the rule.";
+              description = "Wether to enable logging for the rule.";
               default = true;
               example = false;
               type = types.bool;
             };
 
             expr = mkOption {
-              description = mdDoc ''
-                [Expr Language](https://expr-lang.org/docs/language-definition) expression using [OpenGFW analyzers](https://github.com/apernet/OpenGFW/blob/master/docs/Analyzers.md).
+              description = ''
+                [Expr Language](https://expr-lang.org/docs/language-definition) expression using [analyzers](https://gfw.dev/docs/analyzers) and [functions](https://gfw.dev/docs/functions).
               '';
               type = types.str;
               example = ''dns != nil && dns.qr && any(dns.questions, {.name endsWith "google.com"})'';
@@ -241,20 +242,20 @@ in {
 
             modifier = mkOption {
               default = null;
-              description = mdDoc ''
+              description = ''
                 Modification of specified packets when using the `modify` action. [Available modifiers](https://github.com/apernet/OpenGFW/tree/master/modifier)
               '';
               type = types.nullOr (
                 types.submodule {
                   options = {
                     name = mkOption {
-                      description = mdDoc "Name of the modifier.";
+                      description = "Name of the modifier.";
                       type = types.singleLineStr;
                       example = "dns";
                     };
 
                     args = mkOption {
-                      description = mdDoc "Arguments passed to the modifier.";
+                      description = "Arguments passed to the modifier.";
                       type = types.attrs;
                       example = {
                         a = "0.0.0.0";
@@ -316,11 +317,11 @@ in {
 
       serviceConfig = rec {
         WorkingDirectory = cfg.dir;
-        ExecStart = "${config.security.wrapperDir}/OpenGFW -c config.yaml rules.yaml";
+        ExecStart = "${config.security.wrapperDir}/OpenGFW -f ${cfg.logFormat} -l ${cfg.logLevel} -c config.yaml rules.yaml ";
         ExecReload = "kill -HUP $MAINPID";
         Restart = "always";
         User = cfg.user;
-        StandardOutput = mkIf (cfg.logDir != null) "append:${cfg.logDir}";
+        StandardOutput = mkIf (cfg.logFile != null) "append:${cfg.logFile}";
         StandardError = StandardOutput;
       };
     };
