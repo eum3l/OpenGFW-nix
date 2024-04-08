@@ -86,7 +86,7 @@ in {
     settings = mkOption {
       default = null;
       description = ''
-        Settings passed to OpenGFW. [Example config](https://gfw.dev/docs/build-run/#example-config)
+        Settings passed to OpenGFW. [Example config](https://gfw.dev/docs/build-run/#config-example)
       '';
       type = types.nullOr (types.submodule {
         options = {
@@ -205,7 +205,7 @@ in {
     rules = mkOption {
       default = [];
       description = ''
-        Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/build-run#example-rules)
+        Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/rules)
       '';
       type = types.listOf (
         types.submodule {
@@ -218,7 +218,7 @@ in {
 
             action = mkOption {
               description = ''
-                Action of the rule. [Supported actions](https://gfw.dev/docs/build-run#supported-actions)
+                Action of the rule. [Supported actions](https://gfw.dev/docs/rules#supported-actions)
               '';
               default = "allow";
               example = "block";
