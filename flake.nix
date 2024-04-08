@@ -54,7 +54,10 @@ rec {
       }
     )
     // {
-      nixosModules.opengfw = import ./module.nix self.packages;
+      nixosModules = rec {
+        default = opengfw; 
+        opengfw = import ./module.nix self.packages;
+      };
 
       hydraJobs = {
         inherit (self) packages;
