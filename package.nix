@@ -8,7 +8,7 @@
 buildGoModule {
   inherit version src;
   pname = "opengfw";
-  vendorHash = "sha256-x+ZFHk35KKtrZ0rN4Wnj7C2ioCmJynKM0O6+opp9X/k=";
+  vendorHash = "sha256-HJkAF8YSax3UYF60ST8U6Csx10IHXiS/NFEOTGzydv0=";
 
   meta = with lib; {
     inherit platforms;
