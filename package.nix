@@ -9,6 +9,7 @@ buildGoModule {
   inherit version src;
   pname = "opengfw";
   vendorHash = "sha256-HJkAF8YSax3UYF60ST8U6Csx10IHXiS/NFEOTGzydv0=";
+  CGO_ENABLED = 0;
 
   meta = with lib; {
     inherit platforms;
