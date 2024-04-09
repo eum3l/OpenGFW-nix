@@ -43,21 +43,25 @@ rec {
           };
         };
 
-        devShells.default = pkgs.mkShell {
+        devShells.default = pkgs.mkShellNoCC {
           OPENGFW_LOG_LEVEL = "debug";
           CGO_ENABLED = 0;
+          OPENGFW_TMP = "/tmp/opengfw";
 
           inputsFrom = [
             packages.opengfw
           ];
+
+          shellHook = ''
+            rm -r $OPENGFW_TMP
+            cp -r --no-preserve=mode,ownership ${src} $OPENGFW_TMP
+            cd $OPENGFW_TMP
+          '';
         };
       }
     )
     // {
-      nixosModules = rec {
-        default = opengfw; 
-        opengfw = import ./module.nix self.packages;
-      };
+      nixosModules.default = import ./module.nix self.packages;
 
       hydraJobs = {
         inherit (self) packages;
