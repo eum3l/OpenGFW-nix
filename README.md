@@ -1,7 +1,9 @@
 # OpenGFW-nix
-> Nix Package and NixOS Module for [OpenGFW](https://gfw.dev/)
+> Nix Package and NixOS Module ([Options](OPTIONS.md)) for [OpenGFW](https://gfw.dev/)
 
-`nix run github:eum3l/opengfw-nix`
+```sh
+nix run github:eum3l/opengfw-nix
+```
 
 ```nix
 {
