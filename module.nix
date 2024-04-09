@@ -105,7 +105,7 @@ in {
                 };
                 local = mkOption {
                   description = ''
-                    Set to false if you want to run OpenGFW on FORWARD chain.
+                    Set to false if you want to run OpenGFW on FORWARD chain. (e.g. on a router)
                   '';
                   type = types.bool;
                   default = true;
@@ -163,7 +163,10 @@ in {
               options = {
                 count = mkOption {
                   type = types.int;
-                  description = "Number of workers.";
+                  description = ''
+                    Number of workers. 
+                    Recommended to be no more than the number of CPU cores
+                  '';
                   default = 4;
                   example = 8;
                 };
@@ -188,6 +191,15 @@ in {
                   '';
                   default = 64;
                   example = 128;
+                };
+                tcpTimeout = mkOption {
+                  type = types.str;
+                  description = ''
+                    How long a connection is considered dead when no data is being transferred. 
+                    Dead connections are purged from TCP reassembly pools once per minute.
+                  '';
+                  default = "10m";
+                  example = "5m";
                 };
                 udpMaxStreams = mkOption {
                   type = types.int;
