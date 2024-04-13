@@ -164,7 +164,7 @@ in {
                 count = mkOption {
                   type = types.int;
                   description = ''
-                    Number of workers. 
+                    Number of workers.
                     Recommended to be no more than the number of CPU cores
                   '';
                   default = 4;
@@ -195,7 +195,7 @@ in {
                 tcpTimeout = mkOption {
                   type = types.str;
                   description = ''
-                    How long a connection is considered dead when no data is being transferred. 
+                    How long a connection is considered dead when no data is being transferred.
                     Dead connections are purged from TCP reassembly pools once per minute.
                   '';
                   default = "10m";
@@ -348,6 +348,5 @@ in {
       };
     };
   };
-
   meta.maintainers = with lib.maintainers; [eum3l];
 }

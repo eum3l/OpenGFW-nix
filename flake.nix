@@ -8,6 +8,7 @@ rec {
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=23.11";
+    nuenv.url = "github:DeterminateSystems/nuenv";
     flake-utils.url = "github:numtide/flake-utils";
     src = {
       type = "github";
@@ -22,6 +23,7 @@ rec {
     self,
     nixpkgs,
     flake-utils,
+    nuenv,
     src,
   }: let
     platforms = ["aarch64-linux" "x86_64-linux"];
@@ -31,6 +33,7 @@ rec {
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnsupportedSystem = true;
+          overlays = [nuenv.overlays.default];
         };
       in rec {
         formatter = pkgs.alejandra;
@@ -40,6 +43,17 @@ rec {
           opengfw = pkgs.callPackage ./package.nix {
             inherit platforms src;
             version = pkgs.lib.removePrefix "v" inputs.src.ref;
+          };
+
+          options = pkgs.callPackage ./options.nix {
+            module = self.nixosModules.default;
+            writeScriptBin =
+              nuenv.lib.mkNushellScript
+              (pkgs.nushell.override {
+                additionalFeatures = _p: ["extra"];
+                doCheck = false;
+              })
+              pkgs.writeTextFile;
           };
         };
 
