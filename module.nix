@@ -342,7 +342,7 @@ in {
       groups.${cfg.user} = {};
       users.${cfg.user} = {
         description = "opengfw user";
-        isNormalUser = true;
+        isSystemUser = true;
         group = cfg.user;
         home = cfg.dir;
       };
