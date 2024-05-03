@@ -6,16 +6,6 @@ packages: {
 }: let
   inherit (lib) mkOption types mkIf optionalString;
   cfg = config.services.opengfw;
-  format = pkgs.formats.yaml {};
-
-  settings =
-    if cfg.settings != null
-    then format.generate "opengfw-config.yaml" cfg.settings
-    else cfg.settingsFile;
-  rules =
-    if cfg.rules != []
-    then format.generate "opengfw-rules.yaml" cfg.rules
-    else cfg.rulesFile;
 in {
   options.services.opengfw = {
     enable = lib.mkEnableOption ''
@@ -135,7 +125,7 @@ in {
               };
             };
           };
-          geo = mkOption {
+          ruleset = mkOption {
             description = ''
               The path to load specific local geoip/geosite db files.
               If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules-dat)[https://github.com/Loyalsoldier/v2ray-rules-dat].
@@ -309,44 +299,56 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    security.wrappers.OpenGFW = {
-      owner = cfg.user;
-      group = cfg.user;
-      capabilities = "cap_net_admin+ep";
-      source = "${cfg.package}/bin/OpenGFW";
-    };
+  config = let
+    format = pkgs.formats.yaml {};
 
-    systemd.services.opengfw = {
-      description = "OpenGFW";
-      wantedBy = ["multi-user.target"];
-      after = ["network.target"];
-      path = with pkgs; [iptables];
-      preStart = ''
-        ${optionalString (rules != null) "ln -sf ${rules} rules.yaml"}
-        ${optionalString (settings != null) "ln -sf ${settings} config.yaml"}
-      '';
-
-      serviceConfig = rec {
-        WorkingDirectory = cfg.dir;
-        ExecStart = "${config.security.wrapperDir}/OpenGFW -f ${cfg.logFormat} -l ${cfg.logLevel} -c config.yaml rules.yaml ";
-        ExecReload = "kill -HUP $MAINPID";
-        Restart = "always";
-        User = cfg.user;
-        StandardOutput = mkIf (cfg.logFile != null) "append:${cfg.logFile}";
-        StandardError = StandardOutput;
-      };
-    };
-
-    users = {
-      groups.${cfg.user} = {};
-      users.${cfg.user} = {
-        description = "opengfw user";
-        isSystemUser = true;
+    settings =
+      if cfg.settings != null
+      then format.generate "opengfw-config.yaml" cfg.settings
+      else cfg.settingsFile;
+    rules =
+      if cfg.rules != []
+      then format.generate "opengfw-rules.yaml" cfg.rules
+      else cfg.rulesFile;
+  in
+    mkIf cfg.enable {
+      security.wrappers.OpenGFW = {
+        owner = cfg.user;
         group = cfg.user;
-        home = cfg.dir;
+        capabilities = "cap_net_admin+ep";
+        source = "${cfg.package}/bin/OpenGFW";
+      };
+
+      systemd.services.opengfw = {
+        description = "OpenGFW";
+        wantedBy = ["multi-user.target"];
+        after = ["network.target"];
+        path = with pkgs; [iptables];
+        preStart = ''
+          ${optionalString (rules != null) "ln -sf ${rules} rules.yaml"}
+          ${optionalString (settings != null) "ln -sf ${settings} config.yaml"}
+        '';
+
+        serviceConfig = rec {
+          WorkingDirectory = cfg.dir;
+          ExecStart = "${config.security.wrapperDir}/OpenGFW -f ${cfg.logFormat} -l ${cfg.logLevel} -c config.yaml rules.yaml ";
+          ExecReload = "kill -HUP $MAINPID";
+          Restart = "always";
+          User = cfg.user;
+          StandardOutput = mkIf (cfg.logFile != null) "append:${cfg.logFile}";
+          StandardError = StandardOutput;
+        };
+      };
+
+      users = {
+        groups.${cfg.user} = {};
+        users.${cfg.user} = {
+          description = "opengfw user";
+          isSystemUser = true;
+          group = cfg.user;
+          home = cfg.dir;
+        };
       };
     };
-  };
   meta.maintainers = with lib.maintainers; [eum3l];
 }
