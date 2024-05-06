@@ -113,22 +113,6 @@
 + **Type:** null or (submodule)
 + **Default:** null
  
-### services.opengfw.settings.geo
-> The path to load specific local geoip/geosite db files.
-If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules-dat)[https://github.com/Loyalsoldier/v2ray-rules-dat].
-+ **Type:** submodule
-+ **Default:** { }
- 
-### services.opengfw.settings.geo.geoip
-> Path to `geoip.dat`.
-+ **Type:** null or path
-+ **Default:** null
- 
-### services.opengfw.settings.geo.geosite
-> Path to `geosite.dat`.
-+ **Type:** null or path
-+ **Default:** null
- 
 ### services.opengfw.settings.io
 > IO settings.
 + **Type:** submodule
@@ -163,6 +147,22 @@ If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules
 + **Type:** signed integer
 + **Default:** 4194304
 + **Example:** 2097152
+ 
+### services.opengfw.settings.ruleset
+> The path to load specific local geoip/geosite db files.
+If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules-dat)[https://github.com/Loyalsoldier/v2ray-rules-dat].
++ **Type:** submodule
++ **Default:** { }
+ 
+### services.opengfw.settings.ruleset.geoip
+> Path to `geoip.dat`.
++ **Type:** null or path
++ **Default:** null
+ 
+### services.opengfw.settings.ruleset.geosite
+> Path to `geosite.dat`.
++ **Type:** null or path
++ **Default:** null
  
 ### services.opengfw.settings.workers
 > Worker settings.
