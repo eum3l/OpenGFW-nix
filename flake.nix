@@ -45,6 +45,10 @@ rec {
             version = pkgs.lib.removePrefix "v" inputs.src.ref;
           };
 
+          test = pkgs.callPackage ./test.nix {
+            opengfw = self.nixosModules.default;
+          };
+
           options = pkgs.callPackage ./options.nix {
             module = self.nixosModules.default;
             writeScriptBin =

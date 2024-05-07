@@ -347,6 +347,8 @@ in {
           isSystemUser = true;
           group = cfg.user;
           home = cfg.dir;
+          createHome = true;
+          homeMode = "750";
         };
       };
     };
