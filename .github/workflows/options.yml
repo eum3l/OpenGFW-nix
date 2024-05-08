@@ -1,13 +1,14 @@
+name: Update OPTIONS.md
+
 on:
   push:
     branches:
       - main
     paths: 
-      - "module.nix"
+      - module.nix
 
 jobs:
   build:
-    name: Update OPTIONS.md
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

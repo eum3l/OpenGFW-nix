@@ -1,10 +1,11 @@
+name: Test OpenGFW
+
 on: 
   - pull_request 
   - push
     
 jobs:
   run:
-    name: Test OpenGFW
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
