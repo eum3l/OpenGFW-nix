@@ -4,7 +4,7 @@
   ...
 }: let
   logFile = "/var/lib/opengfw/opengfw.log";
-in
+in 
   testers.runNixOSTest {
     name = "OpenGFW Test";
     nodes.machine = {pkgs, ...}: {
@@ -13,8 +13,9 @@ in
       ];
 
       services.opengfw = {
-        enable = true;
         inherit logFile;
+        enable = true;
+        pcapReplay = ./test.pcap;
         settings = {};
         rules = [
           {
@@ -27,7 +28,7 @@ in
                 aaaa = "::";
               };
             };
-            expr = ''dns != nil && dns.qr && any(dns.questions, {.name endsWith "one.one"})'';
+            expr = ''dns != nil && dns.qr && any(dns.questions, {.name endsWith "google.com"})'';
           }
         ];
       };
@@ -35,7 +36,7 @@ in
 
     testScript = ''
       machine.wait_for_unit("opengfw.service")
-      machine.wait_for_file("${logFile}")
+      machine.wait_until_fails("systemctl is-active opengfw.service")
       machine.copy_from_vm("${logFile}")
     '';
   }

@@ -48,6 +48,15 @@ in {
       type = types.enum ["json" "console"];
     };
 
+    pcapReplay = mkOption {
+      default = null;
+      example = "./opengfw.pcap";
+      type = types.nullOr types.path;
+      description = ''
+        Path to PCAP replay file.
+      '';
+    };
+
     logLevel = mkOption {
       description = ''
         Level of the logs. [logLevelMap](https://github.com/apernet/OpenGFW/blob/d7737e92117a11c9a6100d53019fac3b9d724fe3/cmd/root.go#L55)
@@ -80,6 +89,25 @@ in {
       '';
       type = types.nullOr (types.submodule {
         options = {
+          replay = mkOption {
+            description = ''
+              PCAP replay settings.
+            '';
+            default = {};
+            type = types.submodule {
+              options = {
+                realtime = mkOption {
+                  description = ''
+                    Whether replay uses the timestamps from the capture.
+                  '';
+                  default = true;
+                  example = false;
+                  type = types.bool;
+                };
+              };
+            };
+          };
+
           io = mkOption {
             description = ''
               IO settings.
@@ -324,14 +352,23 @@ in {
         wantedBy = ["multi-user.target"];
         after = ["network.target"];
         path = with pkgs; [iptables];
+
         preStart = ''
           ${optionalString (rules != null) "ln -sf ${rules} rules.yaml"}
           ${optionalString (settings != null) "ln -sf ${settings} config.yaml"}
         '';
 
+        script = ''
+          ${config.security.wrapperDir}/OpenGFW \
+            -f ${cfg.logFormat} \
+            -l ${cfg.logLevel} \
+            ${optionalString (cfg.pcapReplay != null) "-p ${cfg.pcapReplay}"} \
+            -c config.yaml \
+            rules.yaml
+        '';
+
         serviceConfig = rec {
           WorkingDirectory = cfg.dir;
-          ExecStart = "${config.security.wrapperDir}/OpenGFW -f ${cfg.logFormat} -l ${cfg.logLevel} -c config.yaml rules.yaml ";
           ExecReload = "kill -HUP $MAINPID";
           Restart = "always";
           User = cfg.user;
