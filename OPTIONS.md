@@ -38,7 +38,7 @@
 > Path to PCAP replay file.
 + **Type:** null or path
 + **Default:** null
-+ **Example:** /nix/store/w8xzm53mhrkgsl08fdzpmw1bm0a1lpk2-source/opengfw.pcap
++ **Example:** "./opengfw.pcap"
  
 ### services.opengfw.rules
 > Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/rules)
