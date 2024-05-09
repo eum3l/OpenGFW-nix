@@ -14,7 +14,7 @@ rec {
       type = "github";
       owner = "apernet";
       repo = "OpenGFW";
-      ref = "v0.3.4";
+      ref = "v0.4.0";
       flake = false;
     };
   };
@@ -45,7 +45,7 @@ rec {
             version = pkgs.lib.removePrefix "v" inputs.src.ref;
           };
 
-          test = pkgs.callPackage ./test.nix {
+          test = pkgs.callPackage ./test {
             opengfw = self.nixosModules.default;
           };
 
