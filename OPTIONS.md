@@ -34,6 +34,12 @@
 + **Type:** package
 + **Default:** pkgs.opengfw
  
+### services.opengfw.pcapReplay
+> Path to PCAP replay file.
++ **Type:** null or path
++ **Default:** null
++ **Example:** /nix/store/w8xzm53mhrkgsl08fdzpmw1bm0a1lpk2-source/opengfw.pcap
+ 
 ### services.opengfw.rules
 > Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/rules)
 + **Type:** list of (submodule)
@@ -147,6 +153,17 @@
 + **Type:** signed integer
 + **Default:** 4194304
 + **Example:** 2097152
+ 
+### services.opengfw.settings.replay
+> PCAP replay settings.
++ **Type:** submodule
++ **Default:** { }
+ 
+### services.opengfw.settings.replay.realtime
+> Whether replay uses the timestamps from the capture.
++ **Type:** boolean
++ **Default:** true
++ **Example:** false
  
 ### services.opengfw.settings.ruleset
 > The path to load specific local geoip/geosite db files.
