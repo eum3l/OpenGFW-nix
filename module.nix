@@ -54,6 +54,8 @@ in {
       type = types.nullOr types.path;
       description = ''
         Path to PCAP replay file.
+        In pcap mode, none of the actions in the rules have any effect.
+        This mode is mainly for debugging.
       '';
     };
 
@@ -98,10 +100,10 @@ in {
               options = {
                 realtime = mkOption {
                   description = ''
-                    Whether replay uses the timestamps from the capture.
+                    Whether the packets in the PCAP file should be replayed in "real time" (instead of as fast as possible).
                   '';
-                  default = true;
-                  example = false;
+                  default = false;
+                  example = true;
                   type = types.bool;
                 };
               };
@@ -256,7 +258,7 @@ in {
             };
 
             log = mkOption {
-              description = "Wether to enable logging for the rule.";
+              description = "Whether to enable logging for the rule.";
               default = true;
               example = false;
               type = types.bool;

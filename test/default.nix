@@ -4,7 +4,7 @@
   ...
 }: let
   logFile = "/var/lib/opengfw/opengfw.log";
-in 
+in
   testers.runNixOSTest {
     name = "OpenGFW Test";
     nodes.machine = {pkgs, ...}: {
