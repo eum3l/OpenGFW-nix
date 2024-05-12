@@ -36,6 +36,8 @@
  
 ### services.opengfw.pcapReplay
 > Path to PCAP replay file.
+In pcap mode, none of the actions in the rules have any effect.
+This mode is mainly for debugging.
 + **Type:** null or path
 + **Default:** null
 + **Example:** "./opengfw.pcap"
@@ -81,7 +83,7 @@
 + **Example:** "dns != nil && dns.qr && any(dns.questions, {.name endsWith \"google.com\"})"
  
 ### services.opengfw.rules.*.log
-> Wether to enable logging for the rule.
+> Whether to enable logging for the rule.
 + **Type:** boolean
 + **Default:** true
 + **Example:** false
@@ -160,10 +162,10 @@
 + **Default:** { }
  
 ### services.opengfw.settings.replay.realtime
-> Whether replay uses the timestamps from the capture.
+> Whether the packets in the PCAP file should be replayed in "real time" (instead of as fast as possible).
 + **Type:** boolean
-+ **Default:** true
-+ **Example:** false
++ **Default:** false
++ **Example:** true
  
 ### services.opengfw.settings.ruleset
 > The path to load specific local geoip/geosite db files.
