@@ -1,20 +1,26 @@
-packages: {
+packages:
+{
   lib,
   pkgs,
   config,
   ...
-}: let
-  inherit (lib) mkOption types mkIf optionalString;
+}:
+let
+  inherit (lib)
+    mkOption
+    types
+    mkIf
+    optionalString
+    ;
   cfg = config.services.opengfw;
-in {
+in
+{
   options.services.opengfw = {
     enable = lib.mkEnableOption ''
       OpenGFW, A flexible, easy-to-use, open source implementation of GFW on Linux
     '';
 
-    package = lib.mkPackageOption packages.${pkgs.system} "opengfw" {
-      default = "opengfw";
-    };
+    package = lib.mkPackageOption packages.${pkgs.system} "opengfw" { default = "opengfw"; };
 
     user = mkOption {
       default = "opengfw";
@@ -45,7 +51,10 @@ in {
       '';
       default = "json";
       example = "console";
-      type = types.enum ["json" "console"];
+      type = types.enum [
+        "json"
+        "console"
+      ];
     };
 
     pcapReplay = mkOption {
@@ -65,7 +74,12 @@ in {
       '';
       default = "info";
       example = "warn";
-      type = types.enum ["debug" "info" "warn" "error"];
+      type = types.enum [
+        "debug"
+        "info"
+        "warn"
+        "error"
+      ];
     };
 
     rulesFile = mkOption {
@@ -89,153 +103,155 @@ in {
       description = ''
         Settings passed to OpenGFW. [Example config](https://gfw.dev/docs/build-run/#config-example)
       '';
-      type = types.nullOr (types.submodule {
-        options = {
-          replay = mkOption {
-            description = ''
-              PCAP replay settings.
-            '';
-            default = {};
-            type = types.submodule {
-              options = {
-                realtime = mkOption {
-                  description = ''
-                    Whether the packets in the PCAP file should be replayed in "real time" (instead of as fast as possible).
-                  '';
-                  default = false;
-                  example = true;
-                  type = types.bool;
+      type = types.nullOr (
+        types.submodule {
+          options = {
+            replay = mkOption {
+              description = ''
+                PCAP replay settings.
+              '';
+              default = { };
+              type = types.submodule {
+                options = {
+                  realtime = mkOption {
+                    description = ''
+                      Whether the packets in the PCAP file should be replayed in "real time" (instead of as fast as possible).
+                    '';
+                    default = false;
+                    example = true;
+                    type = types.bool;
+                  };
                 };
               };
             };
-          };
 
-          io = mkOption {
-            description = ''
-              IO settings.
-            '';
-            default = {};
-            type = types.submodule {
-              options = {
-                queueSize = mkOption {
-                  description = "IO queue size.";
-                  type = types.int;
-                  default = 1024;
-                  example = 2048;
+            io = mkOption {
+              description = ''
+                IO settings.
+              '';
+              default = { };
+              type = types.submodule {
+                options = {
+                  queueSize = mkOption {
+                    description = "IO queue size.";
+                    type = types.int;
+                    default = 1024;
+                    example = 2048;
+                  };
+                  local = mkOption {
+                    description = ''
+                      Set to false if you want to run OpenGFW on FORWARD chain. (e.g. on a router)
+                    '';
+                    type = types.bool;
+                    default = true;
+                    example = false;
+                  };
+                  rst = mkOption {
+                    description = ''
+                      Set to true if you want to send RST for blocked TCP connections, needs `local = false`.
+                    '';
+                    type = types.bool;
+                    default = !cfg.settings.io.local;
+                    defaultText = "`!config.services.opengfw.settings.io.local`";
+                    example = false;
+                  };
+                  rcvBuf = mkOption {
+                    description = "Netlink receive buffer size.";
+                    type = types.int;
+                    default = 4194304;
+                    example = 2097152;
+                  };
+                  sndBuf = mkOption {
+                    description = "Netlink send buffer size.";
+                    type = types.int;
+                    default = 4194304;
+                    example = 2097152;
+                  };
                 };
-                local = mkOption {
-                  description = ''
-                    Set to false if you want to run OpenGFW on FORWARD chain. (e.g. on a router)
-                  '';
-                  type = types.bool;
-                  default = true;
-                  example = false;
+              };
+            };
+            ruleset = mkOption {
+              description = ''
+                The path to load specific local geoip/geosite db files.
+                If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules-dat)[https://github.com/Loyalsoldier/v2ray-rules-dat].
+              '';
+              default = { };
+              type = types.submodule {
+                options = {
+                  geoip = mkOption {
+                    description = "Path to `geoip.dat`.";
+                    default = null;
+                    type = types.nullOr types.path;
+                  };
+                  geosite = mkOption {
+                    description = "Path to `geosite.dat`.";
+                    default = null;
+                    type = types.nullOr types.path;
+                  };
                 };
-                rst = mkOption {
-                  description = ''
-                    Set to true if you want to send RST for blocked TCP connections, needs `local = false`.
-                  '';
-                  type = types.bool;
-                  default = ! cfg.settings.io.local;
-                  defaultText = "`!config.services.opengfw.settings.io.local`";
-                  example = false;
-                };
-                rcvBuf = mkOption {
-                  description = "Netlink receive buffer size.";
-                  type = types.int;
-                  default = 4194304;
-                  example = 2097152;
-                };
-                sndBuf = mkOption {
-                  description = "Netlink send buffer size.";
-                  type = types.int;
-                  default = 4194304;
-                  example = 2097152;
+              };
+            };
+            workers = mkOption {
+              default = { };
+              description = "Worker settings.";
+              type = types.submodule {
+                options = {
+                  count = mkOption {
+                    type = types.int;
+                    description = ''
+                      Number of workers.
+                      Recommended to be no more than the number of CPU cores
+                    '';
+                    default = 4;
+                    example = 8;
+                  };
+                  queueSize = mkOption {
+                    type = types.int;
+                    description = "Worker queue size.";
+                    default = 16;
+                    example = 32;
+                  };
+                  tcpMaxBufferedPagesTotal = mkOption {
+                    type = types.int;
+                    description = ''
+                      TCP max total buffered pages.
+                    '';
+                    default = 4096;
+                    example = 8192;
+                  };
+                  tcpMaxBufferedPagesPerConn = mkOption {
+                    type = types.int;
+                    description = ''
+                      TCP max total bufferd pages per connection.
+                    '';
+                    default = 64;
+                    example = 128;
+                  };
+                  tcpTimeout = mkOption {
+                    type = types.str;
+                    description = ''
+                      How long a connection is considered dead when no data is being transferred.
+                      Dead connections are purged from TCP reassembly pools once per minute.
+                    '';
+                    default = "10m";
+                    example = "5m";
+                  };
+                  udpMaxStreams = mkOption {
+                    type = types.int;
+                    description = "UDP max streams.";
+                    default = 4096;
+                    example = 8192;
+                  };
                 };
               };
             };
           };
-          ruleset = mkOption {
-            description = ''
-              The path to load specific local geoip/geosite db files.
-              If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules-dat)[https://github.com/Loyalsoldier/v2ray-rules-dat].
-            '';
-            default = {};
-            type = types.submodule {
-              options = {
-                geoip = mkOption {
-                  description = "Path to `geoip.dat`.";
-                  default = null;
-                  type = types.nullOr types.path;
-                };
-                geosite = mkOption {
-                  description = "Path to `geosite.dat`.";
-                  default = null;
-                  type = types.nullOr types.path;
-                };
-              };
-            };
-          };
-          workers = mkOption {
-            default = {};
-            description = "Worker settings.";
-            type = types.submodule {
-              options = {
-                count = mkOption {
-                  type = types.int;
-                  description = ''
-                    Number of workers.
-                    Recommended to be no more than the number of CPU cores
-                  '';
-                  default = 4;
-                  example = 8;
-                };
-                queueSize = mkOption {
-                  type = types.int;
-                  description = "Worker queue size.";
-                  default = 16;
-                  example = 32;
-                };
-                tcpMaxBufferedPagesTotal = mkOption {
-                  type = types.int;
-                  description = ''
-                    TCP max total buffered pages.
-                  '';
-                  default = 4096;
-                  example = 8192;
-                };
-                tcpMaxBufferedPagesPerConn = mkOption {
-                  type = types.int;
-                  description = ''
-                    TCP max total bufferd pages per connection.
-                  '';
-                  default = 64;
-                  example = 128;
-                };
-                tcpTimeout = mkOption {
-                  type = types.str;
-                  description = ''
-                    How long a connection is considered dead when no data is being transferred.
-                    Dead connections are purged from TCP reassembly pools once per minute.
-                  '';
-                  default = "10m";
-                  example = "5m";
-                };
-                udpMaxStreams = mkOption {
-                  type = types.int;
-                  description = "UDP max streams.";
-                  default = 4096;
-                  example = 8192;
-                };
-              };
-            };
-          };
-        };
-      });
+        }
+      );
     };
 
     rules = mkOption {
-      default = [];
+      default = [ ];
       description = ''
         Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/rules)
       '';
@@ -254,7 +270,12 @@ in {
               '';
               default = "allow";
               example = "block";
-              type = types.enum ["allow" "block" "drop" "modify"];
+              type = types.enum [
+                "allow"
+                "block"
+                "drop"
+                "modify"
+              ];
             };
 
             log = mkOption {
@@ -329,18 +350,17 @@ in {
     };
   };
 
-  config = let
-    format = pkgs.formats.yaml {};
+  config =
+    let
+      format = pkgs.formats.yaml { };
 
-    settings =
-      if cfg.settings != null
-      then format.generate "opengfw-config.yaml" cfg.settings
-      else cfg.settingsFile;
-    rules =
-      if cfg.rules != []
-      then format.generate "opengfw-rules.yaml" cfg.rules
-      else cfg.rulesFile;
-  in
+      settings =
+        if cfg.settings != null then
+          format.generate "opengfw-config.yaml" cfg.settings
+        else
+          cfg.settingsFile;
+      rules = if cfg.rules != [ ] then format.generate "opengfw-rules.yaml" cfg.rules else cfg.rulesFile;
+    in
     mkIf cfg.enable {
       security.wrappers.OpenGFW = {
         owner = cfg.user;
@@ -351,9 +371,9 @@ in {
 
       systemd.services.opengfw = {
         description = "OpenGFW";
-        wantedBy = ["multi-user.target"];
-        after = ["network.target"];
-        path = with pkgs; [iptables];
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network.target" ];
+        path = with pkgs; [ iptables ];
 
         preStart = ''
           ${optionalString (rules != null) "ln -sf ${rules} rules.yaml"}
@@ -380,7 +400,7 @@ in {
       };
 
       users = {
-        groups.${cfg.user} = {};
+        groups.${cfg.user} = { };
         users.${cfg.user} = {
           description = "opengfw user";
           isSystemUser = true;
@@ -391,5 +411,5 @@ in {
         };
       };
     };
-  meta.maintainers = with lib.maintainers; [eum3l];
+  meta.maintainers = with lib.maintainers; [ eum3l ];
 }

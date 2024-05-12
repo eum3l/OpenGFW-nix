@@ -2,12 +2,13 @@ rec {
   description = "OpenGFW is a flexible, easy-to-use, open source implementation of GFW on Linux.";
 
   nixConfig = {
-    extra-substituters = ["https://opengfw.cachix.org"];
-    extra-trusted-public-keys = ["opengfw.cachix.org-1:vuygVQLuz+GEsqd6RrPOU8ckphW1MVe8MFm22cOo2is="];
+    extra-substituters = [ "https://opengfw.cachix.org" ];
+    extra-trusted-public-keys = [ "opengfw.cachix.org-1:vuygVQLuz+GEsqd6RrPOU8ckphW1MVe8MFm22cOo2is=" ];
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    uspkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nuenv.url = "github:DeterminateSystems/nuenv";
     flake-utils.url = "github:numtide/flake-utils";
     src = {
@@ -19,24 +20,33 @@ rec {
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    nuenv,
-    src,
-  }: let
-    platforms = ["aarch64-linux" "x86_64-linux"];
-  in
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      nuenv,
+      src,
+      uspkgs,
+    }:
+    let
+      platforms = [
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
+    in
     flake-utils.lib.eachSystem platforms (
-      system: let
+      system:
+      let
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnsupportedSystem = true;
-          overlays = [nuenv.overlays.default];
+          overlays = [ nuenv.overlays.default ];
         };
-      in rec {
-        formatter = pkgs.alejandra;
+        unstable = import uspkgs { inherit system; };
+      in
+      rec {
+        formatter = unstable.nixfmt-rfc-style;
 
         packages = rec {
           default = opengfw;
@@ -45,19 +55,14 @@ rec {
             version = pkgs.lib.removePrefix "v" inputs.src.ref;
           };
 
-          test = pkgs.callPackage ./test {
-            opengfw = self.nixosModules.default;
-          };
+          test = pkgs.callPackage ./test { opengfw = self.nixosModules.default; };
 
           options = pkgs.callPackage ./options.nix {
             module = self.nixosModules.default;
-            writeScriptBin =
-              nuenv.lib.mkNushellScript
-              (pkgs.nushell.override {
-                additionalFeatures = _p: ["extra"];
-                doCheck = false;
-              })
-              pkgs.writeTextFile;
+            writeScriptBin = nuenv.lib.mkNushellScript (pkgs.nushell.override {
+              additionalFeatures = _p: [ "extra" ];
+              doCheck = false;
+            }) pkgs.writeTextFile;
           };
         };
 
@@ -66,9 +71,7 @@ rec {
           CGO_ENABLED = 0;
           OPENGFW_TMP = "/tmp/opengfw";
 
-          inputsFrom = [
-            packages.opengfw
-          ];
+          inputsFrom = [ packages.opengfw ];
 
           shellHook = ''
             rm -r $OPENGFW_TMP

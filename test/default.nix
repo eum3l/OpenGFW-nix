@@ -1,22 +1,19 @@
-{
-  testers,
-  opengfw,
-  ...
-}: let
+{ testers, opengfw, ... }:
+let
   logFile = "/var/lib/opengfw/opengfw.log";
 in
-  testers.runNixOSTest {
-    name = "OpenGFW Test";
-    nodes.machine = {pkgs, ...}: {
-      imports = [
-        opengfw
-      ];
+testers.runNixOSTest {
+  name = "OpenGFW Test";
+  nodes.machine =
+    { pkgs, ... }:
+    {
+      imports = [ opengfw ];
 
       services.opengfw = {
         inherit logFile;
         enable = true;
         pcapReplay = ./test.pcap;
-        settings = {};
+        settings = { };
         rules = [
           {
             name = "google dns poisoning";
@@ -34,9 +31,9 @@ in
       };
     };
 
-    testScript = ''
-      machine.wait_for_unit("opengfw.service")
-      machine.wait_until_fails("systemctl is-active opengfw.service")
-      machine.copy_from_vm("${logFile}")
-    '';
-  }
+  testScript = ''
+    machine.wait_for_unit("opengfw.service")
+    machine.wait_until_fails("systemctl is-active opengfw.service")
+    machine.copy_from_vm("${logFile}")
+  '';
+}
