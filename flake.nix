@@ -9,7 +9,6 @@ rec {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     uspkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nuenv.url = "github:DeterminateSystems/nuenv";
     flake-utils.url = "github:numtide/flake-utils";
     src = {
       type = "github";
@@ -25,7 +24,6 @@ rec {
       self,
       nixpkgs,
       flake-utils,
-      nuenv,
       src,
       uspkgs,
     }:
@@ -41,9 +39,10 @@ rec {
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnsupportedSystem = true;
-          overlays = [ nuenv.overlays.default ];
         };
-        unstable = import uspkgs { inherit system; };
+        unstable = import uspkgs {
+          inherit system;
+        };
       in
       rec {
         formatter = unstable.nixfmt-rfc-style;
@@ -57,13 +56,7 @@ rec {
 
           test = pkgs.callPackage ./test { opengfw = self.nixosModules.default; };
 
-          options = pkgs.callPackage ./options.nix {
-            module = self.nixosModules.default;
-            writeScriptBin = nuenv.lib.mkNushellScript (pkgs.nushell.override {
-              additionalFeatures = _p: [ "extra" ];
-              doCheck = false;
-            }) pkgs.writeTextFile;
-          };
+          options = unstable.callPackage ./options { module = self.nixosModules.default; };
         };
 
         devShells.default = pkgs.mkShellNoCC {

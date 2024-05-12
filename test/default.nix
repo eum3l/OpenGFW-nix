@@ -5,7 +5,7 @@ in
 testers.runNixOSTest {
   name = "OpenGFW Test";
   nodes.machine =
-    { pkgs, ... }:
+    { ... }:
     {
       imports = [ opengfw ];
 
