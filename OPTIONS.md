@@ -169,7 +169,7 @@ This mode is mainly for debugging.
  
 ### services.opengfw.settings.ruleset
 > The path to load specific local geoip/geosite db files.
-If not set, they will be automatically downloaded from (Loyalsoldier/v2ray-rules-dat)[https://github.com/Loyalsoldier/v2ray-rules-dat].
+If not set, they will be automatically downloaded from [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat).
 + **Type:** submodule
 + **Default:** { }
  
