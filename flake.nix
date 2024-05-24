@@ -40,9 +40,7 @@ rec {
           inherit system;
           config.allowUnsupportedSystem = true;
         };
-        unstable = import uspkgs {
-          inherit system;
-        };
+        unstable = import uspkgs { inherit system; };
       in
       rec {
         formatter = unstable.nixfmt-rfc-style;
@@ -54,10 +52,10 @@ rec {
             version = pkgs.lib.removePrefix "v" inputs.src.ref;
           };
 
-          test = pkgs.callPackage ./test { opengfw = self.nixosModules.default; };
-
           options = unstable.callPackage ./options { module = self.nixosModules.default; };
         };
+
+        checks.default = pkgs.callPackage ./check { opengfw = self.nixosModules.default; };
 
         devShells.default = pkgs.mkShellNoCC {
           OPENGFW_LOG_LEVEL = "debug";

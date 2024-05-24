@@ -1,4 +1,4 @@
-name: Test OpenGFW
+name: Check OpenGFW
 
 on: 
   - pull_request 
@@ -13,5 +13,5 @@ jobs:
         uses: cachix/install-nix-action@v26 
         with:
           nix_path: nixpkgs=channel:nixos-23.11
-      - name: Run Test
-        run: nix build .#test
+      - name: Run Flake Check
+        run: nix flake check 
