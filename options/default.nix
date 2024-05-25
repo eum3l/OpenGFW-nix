@@ -26,9 +26,10 @@ writers.writeNuBin "update-options.nu" ''
     | each {
       | i |
   $'
-  ### ($i.name)
+  ## ($i.name)
   > ($i.option.description | str trim)
-  + **Type:** ($i.option.type)(try {$"\n+ **Default:** ($i.option.default.text)"})(try {$"\n+ **Example:** ($i.option.example.text)"})
+  + **Type:** ($i.option.type)(try {$"\n### Default\n```nix\n($i.option.default.text)\n```"})(try {$"\n### Example \n```nix\n($i.option.example.text)\n```"})
+  ---
   '
     }
     | prepend "# Options"
