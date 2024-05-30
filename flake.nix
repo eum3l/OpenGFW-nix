@@ -10,6 +10,7 @@ rec {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     uspkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    options-nix.url = "github:eum3l/options.nix";
     src = {
       type = "github";
       owner = "apernet";
@@ -24,6 +25,7 @@ rec {
       self,
       nixpkgs,
       flake-utils,
+      options-nix,
       src,
       uspkgs,
     }:
@@ -52,7 +54,7 @@ rec {
             version = pkgs.lib.removePrefix "v" inputs.src.ref;
           };
 
-          options = unstable.callPackage ./options { module = self.nixosModules.default; };
+          options = options-nix.lib.${system}.mkOptionScript { module = self.nixosModules.default; modulePrefix = "services.opengfw"; };
         };
 
         checks.default = pkgs.callPackage ./check { opengfw = self.nixosModules.default; };
