@@ -1,7 +1,10 @@
 # Options 
 ## services.opengfw.dir
-> Working directory of the OpenGFW service and home of `opengfw.user`.
-+ **Type:** (optionally newline-terminated) single-line string
+Working directory of the OpenGFW service and home of `opengfw.user`.
+### Type
+```
+(optionally newline-terminated) single-line string
+```
 ### Default
 ```nix
 "/var/lib/opengfw"
@@ -9,9 +12,12 @@
 ---
  
 ## services.opengfw.enable
-> Whether to enable OpenGFW, A flexible, easy-to-use, open source implementation of GFW on Linux
+Whether to enable OpenGFW, A flexible, easy-to-use, open source implementation of GFW on Linux
 .
-+ **Type:** boolean
+### Type
+```
+boolean
+```
 ### Default
 ```nix
 false
@@ -23,8 +29,11 @@ true
 ---
  
 ## services.opengfw.logFile
-> File to write the output to instead of systemd.
-+ **Type:** null or path
+File to write the output to instead of systemd.
+### Type
+```
+null or path
+```
 ### Default
 ```nix
 null
@@ -36,8 +45,11 @@ null
 ---
  
 ## services.opengfw.logFormat
-> Format of the logs. [logFormatMap](https://github.com/apernet/OpenGFW/blob/d7737e92117a11c9a6100d53019fac3b9d724fe3/cmd/root.go#L62)
-+ **Type:** one of "json", "console"
+Format of the logs. [logFormatMap](https://github.com/apernet/OpenGFW/blob/d7737e92117a11c9a6100d53019fac3b9d724fe3/cmd/root.go#L62)
+### Type
+```
+one of "json", "console"
+```
 ### Default
 ```nix
 "json"
@@ -49,8 +61,11 @@ null
 ---
  
 ## services.opengfw.logLevel
-> Level of the logs. [logLevelMap](https://github.com/apernet/OpenGFW/blob/d7737e92117a11c9a6100d53019fac3b9d724fe3/cmd/root.go#L55)
-+ **Type:** one of "debug", "info", "warn", "error"
+Level of the logs. [logLevelMap](https://github.com/apernet/OpenGFW/blob/d7737e92117a11c9a6100d53019fac3b9d724fe3/cmd/root.go#L55)
+### Type
+```
+one of "debug", "info", "warn", "error"
+```
 ### Default
 ```nix
 "info"
@@ -62,8 +77,11 @@ null
 ---
  
 ## services.opengfw.package
-> The opengfw package to use.
-+ **Type:** package
+The opengfw package to use.
+### Type
+```
+package
+```
 ### Default
 ```nix
 pkgs.opengfw
@@ -71,10 +89,13 @@ pkgs.opengfw
 ---
  
 ## services.opengfw.pcapReplay
-> Path to PCAP replay file.
+Path to PCAP replay file.
 In pcap mode, none of the actions in the rules have any effect.
 This mode is mainly for debugging.
-+ **Type:** null or path
+### Type
+```
+null or path
+```
 ### Default
 ```nix
 null
@@ -86,8 +107,11 @@ null
 ---
  
 ## services.opengfw.rules
-> Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/rules)
-+ **Type:** list of (submodule)
+Rules passed to OpenGFW. [Example rules](https://gfw.dev/docs/rules)
+### Type
+```
+list of (submodule)
+```
 ### Default
 ```nix
 [ ]
@@ -122,8 +146,11 @@ null
 ---
  
 ## services.opengfw.rules.*.action
-> Action of the rule. [Supported actions](https://gfw.dev/docs/rules#supported-actions)
-+ **Type:** one of "allow", "block", "drop", "modify"
+Action of the rule. [Supported actions](https://gfw.dev/docs/rules#supported-actions)
+### Type
+```
+one of "allow", "block", "drop", "modify"
+```
 ### Default
 ```nix
 "allow"
@@ -135,8 +162,11 @@ null
 ---
  
 ## services.opengfw.rules.*.expr
-> [Expr Language](https://expr-lang.org/docs/language-definition) expression using [analyzers](https://gfw.dev/docs/analyzers) and [functions](https://gfw.dev/docs/functions).
-+ **Type:** string
+[Expr Language](https://expr-lang.org/docs/language-definition) expression using [analyzers](https://gfw.dev/docs/analyzers) and [functions](https://gfw.dev/docs/functions).
+### Type
+```
+string
+```
 ### Example 
 ```nix
 "dns != nil && dns.qr && any(dns.questions, {.name endsWith \"google.com\"})"
@@ -144,8 +174,11 @@ null
 ---
  
 ## services.opengfw.rules.*.log
-> Whether to enable logging for the rule.
-+ **Type:** boolean
+Whether to enable logging for the rule.
+### Type
+```
+boolean
+```
 ### Default
 ```nix
 true
@@ -157,8 +190,11 @@ false
 ---
  
 ## services.opengfw.rules.*.modifier
-> Modification of specified packets when using the `modify` action. [Available modifiers](https://github.com/apernet/OpenGFW/tree/master/modifier)
-+ **Type:** null or (submodule)
+Modification of specified packets when using the `modify` action. [Available modifiers](https://github.com/apernet/OpenGFW/tree/master/modifier)
+### Type
+```
+null or (submodule)
+```
 ### Default
 ```nix
 null
@@ -166,8 +202,11 @@ null
 ---
  
 ## services.opengfw.rules.*.modifier.args
-> Arguments passed to the modifier.
-+ **Type:** attribute set
+Arguments passed to the modifier.
+### Type
+```
+attribute set
+```
 ### Example 
 ```nix
 {
@@ -178,8 +217,11 @@ null
 ---
  
 ## services.opengfw.rules.*.modifier.name
-> Name of the modifier.
-+ **Type:** (optionally newline-terminated) single-line string
+Name of the modifier.
+### Type
+```
+(optionally newline-terminated) single-line string
+```
 ### Example 
 ```nix
 "dns"
@@ -187,8 +229,11 @@ null
 ---
  
 ## services.opengfw.rules.*.name
-> Name of the rule.
-+ **Type:** (optionally newline-terminated) single-line string
+Name of the rule.
+### Type
+```
+(optionally newline-terminated) single-line string
+```
 ### Example 
 ```nix
 "block google dns"
@@ -196,8 +241,11 @@ null
 ---
  
 ## services.opengfw.rulesFile
-> Path to file containing OpenGFW rules.
-+ **Type:** null or path
+Path to file containing OpenGFW rules.
+### Type
+```
+null or path
+```
 ### Default
 ```nix
 null
@@ -205,8 +253,11 @@ null
 ---
  
 ## services.opengfw.settings
-> Settings passed to OpenGFW. [Example config](https://gfw.dev/docs/build-run/#config-example)
-+ **Type:** null or (submodule)
+Settings passed to OpenGFW. [Example config](https://gfw.dev/docs/build-run/#config-example)
+### Type
+```
+null or (submodule)
+```
 ### Default
 ```nix
 null
@@ -214,8 +265,11 @@ null
 ---
  
 ## services.opengfw.settings.io
-> IO settings.
-+ **Type:** submodule
+IO settings.
+### Type
+```
+submodule
+```
 ### Default
 ```nix
 { }
@@ -223,8 +277,11 @@ null
 ---
  
 ## services.opengfw.settings.io.local
-> Set to false if you want to run OpenGFW on FORWARD chain. (e.g. on a router)
-+ **Type:** boolean
+Set to false if you want to run OpenGFW on FORWARD chain. (e.g. on a router)
+### Type
+```
+boolean
+```
 ### Default
 ```nix
 true
@@ -236,8 +293,11 @@ false
 ---
  
 ## services.opengfw.settings.io.queueSize
-> IO queue size.
-+ **Type:** signed integer
+IO queue size.
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 1024
@@ -249,8 +309,11 @@ false
 ---
  
 ## services.opengfw.settings.io.rcvBuf
-> Netlink receive buffer size.
-+ **Type:** signed integer
+Netlink receive buffer size.
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 4194304
@@ -262,8 +325,11 @@ false
 ---
  
 ## services.opengfw.settings.io.rst
-> Set to true if you want to send RST for blocked TCP connections, needs `local = false`.
-+ **Type:** boolean
+Set to true if you want to send RST for blocked TCP connections, needs `local = false`.
+### Type
+```
+boolean
+```
 ### Default
 ```nix
 "`!config.services.opengfw.settings.io.local`"
@@ -275,8 +341,11 @@ false
 ---
  
 ## services.opengfw.settings.io.sndBuf
-> Netlink send buffer size.
-+ **Type:** signed integer
+Netlink send buffer size.
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 4194304
@@ -288,8 +357,11 @@ false
 ---
  
 ## services.opengfw.settings.replay
-> PCAP replay settings.
-+ **Type:** submodule
+PCAP replay settings.
+### Type
+```
+submodule
+```
 ### Default
 ```nix
 { }
@@ -297,8 +369,11 @@ false
 ---
  
 ## services.opengfw.settings.replay.realtime
-> Whether the packets in the PCAP file should be replayed in "real time" (instead of as fast as possible).
-+ **Type:** boolean
+Whether the packets in the PCAP file should be replayed in "real time" (instead of as fast as possible).
+### Type
+```
+boolean
+```
 ### Default
 ```nix
 false
@@ -310,9 +385,12 @@ true
 ---
  
 ## services.opengfw.settings.ruleset
-> The path to load specific local geoip/geosite db files.
+The path to load specific local geoip/geosite db files.
 If not set, they will be automatically downloaded from [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat).
-+ **Type:** submodule
+### Type
+```
+submodule
+```
 ### Default
 ```nix
 { }
@@ -320,8 +398,11 @@ If not set, they will be automatically downloaded from [Loyalsoldier/v2ray-rules
 ---
  
 ## services.opengfw.settings.ruleset.geoip
-> Path to `geoip.dat`.
-+ **Type:** null or path
+Path to `geoip.dat`.
+### Type
+```
+null or path
+```
 ### Default
 ```nix
 null
@@ -329,8 +410,11 @@ null
 ---
  
 ## services.opengfw.settings.ruleset.geosite
-> Path to `geosite.dat`.
-+ **Type:** null or path
+Path to `geosite.dat`.
+### Type
+```
+null or path
+```
 ### Default
 ```nix
 null
@@ -338,8 +422,11 @@ null
 ---
  
 ## services.opengfw.settings.workers
-> Worker settings.
-+ **Type:** submodule
+Worker settings.
+### Type
+```
+submodule
+```
 ### Default
 ```nix
 { }
@@ -347,9 +434,12 @@ null
 ---
  
 ## services.opengfw.settings.workers.count
-> Number of workers.
+Number of workers.
 Recommended to be no more than the number of CPU cores
-+ **Type:** signed integer
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 4
@@ -361,8 +451,11 @@ Recommended to be no more than the number of CPU cores
 ---
  
 ## services.opengfw.settings.workers.queueSize
-> Worker queue size.
-+ **Type:** signed integer
+Worker queue size.
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 16
@@ -374,8 +467,11 @@ Recommended to be no more than the number of CPU cores
 ---
  
 ## services.opengfw.settings.workers.tcpMaxBufferedPagesPerConn
-> TCP max total bufferd pages per connection.
-+ **Type:** signed integer
+TCP max total bufferd pages per connection.
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 64
@@ -387,8 +483,11 @@ Recommended to be no more than the number of CPU cores
 ---
  
 ## services.opengfw.settings.workers.tcpMaxBufferedPagesTotal
-> TCP max total buffered pages.
-+ **Type:** signed integer
+TCP max total buffered pages.
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 4096
@@ -400,9 +499,12 @@ Recommended to be no more than the number of CPU cores
 ---
  
 ## services.opengfw.settings.workers.tcpTimeout
-> How long a connection is considered dead when no data is being transferred.
+How long a connection is considered dead when no data is being transferred.
 Dead connections are purged from TCP reassembly pools once per minute.
-+ **Type:** string
+### Type
+```
+string
+```
 ### Default
 ```nix
 "10m"
@@ -414,8 +516,11 @@ Dead connections are purged from TCP reassembly pools once per minute.
 ---
  
 ## services.opengfw.settings.workers.udpMaxStreams
-> UDP max streams.
-+ **Type:** signed integer
+UDP max streams.
+### Type
+```
+signed integer
+```
 ### Default
 ```nix
 4096
@@ -427,8 +532,11 @@ Dead connections are purged from TCP reassembly pools once per minute.
 ---
  
 ## services.opengfw.settingsFile
-> Path to file containing OpenGFW settings.
-+ **Type:** null or path
+Path to file containing OpenGFW settings.
+### Type
+```
+null or path
+```
 ### Default
 ```nix
 null
@@ -436,8 +544,11 @@ null
 ---
  
 ## services.opengfw.user
-> Username of the OpenGFW user.
-+ **Type:** (optionally newline-terminated) single-line string
+Username of the OpenGFW user.
+### Type
+```
+(optionally newline-terminated) single-line string
+```
 ### Default
 ```nix
 "opengfw"
