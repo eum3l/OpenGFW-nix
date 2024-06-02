@@ -54,7 +54,11 @@ rec {
             version = pkgs.lib.removePrefix "v" inputs.src.ref;
           };
 
-          options = options-nix.lib.${system}.mkOptionScript { module = self.nixosModules.default; modulePrefix = "services.opengfw"; };
+          options = options-nix.lib.mkOptionScript {
+            inherit system;
+            module = self.nixosModules.default;
+            modulePrefix = "services.opengfw";
+          };
         };
 
         checks.default = pkgs.callPackage ./check { opengfw = self.nixosModules.default; };
