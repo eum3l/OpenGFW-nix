@@ -138,6 +138,28 @@ in
                     default = 1024;
                     example = 2048;
                   };
+                  table = mkOption {
+                    description = "nftables table name.";
+                    type = types.str;
+                    default = "opengfw";
+                    example = "opengfw2";
+                  };
+                  queueNum = mkOption {
+                    description = "nfqueue queue number.";
+                    type = types.int;
+                    default = 100;
+                    example = 200;
+                  };
+                  connMarkAccept = mkOption {
+                    description = "connmark value for accepted connections";
+                    type = types.int;
+                    default = 1001;
+                  };
+                  connMarkDrop = mkOption {
+                    description = "connmark value for dropped connections";
+                    type = types.int;
+                    default = 1002;
+                  };
                   local = mkOption {
                     description = ''
                       Set to false if you want to run OpenGFW on FORWARD chain. (e.g. on a router)
