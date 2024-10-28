@@ -17,7 +17,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y qemu-user-static qemu-system-aarch64
-          sudo addgroup kvm
           sudo usermod -aG kvm $USER
       - uses: cachix/install-nix-action@v26
         with:
