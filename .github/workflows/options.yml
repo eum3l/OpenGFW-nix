@@ -9,7 +9,7 @@ on:
       - options/default.nix
 
 jobs:
-  build:
+  options:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,4 +24,5 @@ jobs:
         with:
           add: 'OPTIONS.md'
           message: 'docs: update OPTIONS.md'
+          commit-committer: 'github-actions'
           push: true

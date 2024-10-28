@@ -7,15 +7,14 @@ rec {
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    uspkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils";
     options-nix.url = "github:eum3l/options.nix";
     src = {
       type = "github";
       owner = "apernet";
       repo = "OpenGFW";
-      ref = "v0.4.0";
+      ref = "v0.4.1";
       flake = false;
     };
   };
@@ -27,7 +26,6 @@ rec {
       flake-utils,
       options-nix,
       src,
-      uspkgs,
     }:
     let
       platforms = [
@@ -42,10 +40,9 @@ rec {
           inherit system;
           config.allowUnsupportedSystem = true;
         };
-        unstable = import uspkgs { inherit system; };
       in
       rec {
-        formatter = unstable.nixfmt-rfc-style;
+        formatter = pkgs.nixfmt-rfc-style;
 
         packages = rec {
           default = opengfw;
